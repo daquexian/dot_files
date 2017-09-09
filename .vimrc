@@ -1,6 +1,8 @@
 set encoding=utf-8
 
 cmap w!! w !sudo tee > /dev/null %
+cmap vsb vertical sb
+
 map <C-h> :bp<CR>
 map <C-l> :bn<CR>
 let mapleader=","
