@@ -1,8 +1,8 @@
 set encoding=utf-8
 
 cmap w!! w !sudo tee > /dev/null %
-map <C-h> :tabp<CR>
-map <C-l> :tabn<CR>
+map <C-h> :bp<CR>
+map <C-l> :bn<CR>
 let mapleader=","
 map <leader>tl :TlistToggle<CR>
 " 开启实时搜索功能
@@ -12,6 +12,7 @@ set background=dark
 " colorscheme molokai
 " let g:molokai_original=1
 " let g:rehash256=1
+set hidden
 set laststatus=2
 set ruler
 set cursorline
@@ -30,12 +31,18 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-let g:syntastic_java_checkers=['javac']
-let g:syntastic_java_javac_config_file_enabled = 1
+Plugin 'w0rp/ale'
 Plugin 'luochen1990/rainbow'
 let g:rainbow_active = 1
 
+Plugin 'vim-airline/vim-airline'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#exclude_preview = 1
+let airline#extensions#tabline#disable_refresh = 0
+let g:airline#extensions#tabline#buffer_min_count = 0
+let g:airline#extensions#tabline#show_tabs = 0
 Plugin 'scrooloose/nerdtree'
 let g:NERDTreeDirAllows=0
 " 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
