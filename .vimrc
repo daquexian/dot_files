@@ -7,8 +7,12 @@ map <C-h> :bp<CR>
 map <C-l> :bn<CR>
 let mapleader=","
 map <leader>tl :TlistToggle<CR>
+
+set autoindent
+
 " 开启实时搜索功能
 " set incsearch
+set backspace=indent,eol,start
 set wildmenu
 set background=dark
 " colorscheme molokai
