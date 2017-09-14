@@ -76,6 +76,8 @@ let Tlist_Exit_OnlyWindow=1             "如果taglist窗口是最后一个窗�
 "let Tlist_Use_Right_Window=1           "在右侧窗口中显示taglist窗口
 "let Tlist_Use_Left_Windo =1             "在左侧窗口中显示taglist窗口 
 
+Plugin 'chiphogg/vim-prototxt'
+Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 """""""""""""
 call vundle#end()            " required
 filetype plugin indent on    " required
