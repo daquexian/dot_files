@@ -28,6 +28,10 @@ set number
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+execute pathogen#infect()
+execute pathogen#helptags()
+
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
