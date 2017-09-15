@@ -82,3 +82,6 @@ Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 call vundle#end()            " required
 filetype plugin indent on    " required
 syntax on
+
+" For prototxt
+au Filetype prototxt setl tabstop=2 shiftwidth=2
