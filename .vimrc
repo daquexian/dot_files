@@ -40,6 +40,8 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'Valloric/YouCompleteMe'
+let g:ycm_python_binary_path = '/usr/bin/python3'
 Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
 Plugin 'luochen1990/rainbow'
@@ -82,6 +84,18 @@ Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 call vundle#end()            " required
 filetype plugin indent on    " required
 syntax on
+
+" set fixed height of preview window
+set previewheight=20
+au BufEnter ?* call PreviewHeightWorkAround()
+func PreviewHeightWorkAround()
+    if &previewwindow
+        exec 'setlocal winheight='.&previewheight
+    endif
+endfunc
+
+" close preview window for completion
+set completeopt-=preview
 
 " For prototxt
 au Filetype prototxt setl tabstop=2 shiftwidth=2
