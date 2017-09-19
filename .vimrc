@@ -10,6 +10,8 @@ map <leader>tl :TlistToggle<CR>
 
 set autoindent
 
+set expandtab
+
 " 开启实时搜索功能
 " set incsearch
 set backspace=indent,eol,start
