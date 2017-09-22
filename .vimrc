@@ -44,6 +44,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
 let g:ycm_python_binary_path = '/usr/bin/python3'
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
+
 Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
 Plugin 'luochen1990/rainbow'
