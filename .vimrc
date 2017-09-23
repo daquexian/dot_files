@@ -11,6 +11,7 @@ map <leader>tl :TlistToggle<CR>
 set autoindent
 
 set expandtab
+set tabstop=4 shiftwidth=4
 
 " 开启实时搜索功能
 " set incsearch
@@ -43,8 +44,10 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
-let g:ycm_python_binary_path = '/usr/bin/python3'
+" let g:ycm_python_binary_path = '/usr/bin/python3'
+let g:ycm_python_binary_path = '/usr/local/bin/python3'
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
+let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
 
 Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
