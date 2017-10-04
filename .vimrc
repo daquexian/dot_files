@@ -37,7 +37,7 @@ call plug#begin()
 """""""""""""" YCM
 function! BuildYCM(info)
   if a:info.status == 'installed' || a:info.force
-    !./install.py --clang-completer
+    !./install.py --clang-completer --system-libclang
   endif
 endfunction
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
@@ -104,8 +104,8 @@ Plug 'chiphogg/vim-prototxt', { 'for': 'prototxt' }
 """""""""""""" vim-numbertoggle
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
-"""""""""""""" vim-commentary
-Plug 'tpope/vim-commentary'
+"""""""""""""" tcomment_vim
+Plug 'tomtom/tcomment_vim'
 """"""""""""""
 call plug#end()            " required
 filetype plugin indent on    " required
