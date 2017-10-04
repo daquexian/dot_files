@@ -37,7 +37,7 @@ call plug#begin()
 """""""""""""" YCM
 function! BuildYCM(info)
   if a:info.status == 'installed' || a:info.force
-    !./install.sh
+    !./install.py --clang-completer
   endif
 endfunction
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
