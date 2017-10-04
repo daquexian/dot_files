@@ -45,6 +45,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 let g:ycm_python_binary_path = '/usr/local/bin/python3'
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
+let g:ycm_show_diagnostics_ui = 0
 
 """""""""""""" ctrlp
 Plug 'kien/ctrlp.vim'
