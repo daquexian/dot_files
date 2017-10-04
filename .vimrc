@@ -31,30 +31,39 @@ set number
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-execute pathogen#infect()
-execute pathogen#helptags()
 
+call plug#begin()
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
+"""""""""""""" YCM
+function! BuildYCM(info)
+  if a:info.status == 'installed' || a:info.force
+    !./install.sh
+  endif
+endfunction
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " let g:ycm_python_binary_path = '/usr/bin/python3'
 let g:ycm_python_binary_path = '/usr/local/bin/python3'
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
 
-Plugin 'kien/ctrlp.vim'
-Plugin 'w0rp/ale'
-Plugin 'luochen1990/rainbow'
+"""""""""""""" ctrlp
+Plug 'kien/ctrlp.vim'
+
+"""""""""""""" ale
+Plug 'w0rp/ale'
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=White
+" let g:ale_linters = { 'cpp': [] }
+
+"""""""""""""" rainbow
+Plug 'luochen1990/rainbow'
 let g:rainbow_active = 1
 
-Plugin 'vim-airline/vim-airline'
+"""""""""""""" vim-airline
+Plug 'vim-airline/vim-airline'
+let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_buffers = 1
@@ -62,7 +71,9 @@ let g:airline#extensions#tabline#exclude_preview = 1
 let airline#extensions#tabline#disable_refresh = 0
 let g:airline#extensions#tabline#buffer_min_count = 0
 let g:airline#extensions#tabline#show_tabs = 0
-Plugin 'scrooloose/nerdtree'
+
+"""""""""""""" nerdtree
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 let g:NERDTreeDirAllows=0
 " 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
 nmap <Leader>fl :NERDTreeToggle<CR>
@@ -77,7 +88,8 @@ let NERDTreeMinimalUI=1
 " 删除文件时自动删除文件对应 buffer
 let NERDTreeAutoDeleteBuffer=1
 
-Bundle 'taglist.vim'
+"""""""""""""" taglist
+Plug 'vim-scripts/taglist.vim'
 let Tlist_Ctags_Cmd='ctags'
 let Tlist_Show_One_File=1               "不同时显示多个文件的tag，只显示当前文件的
 let Tlist_WinWidt =28                   "设置taglist的宽度
@@ -85,10 +97,13 @@ let Tlist_Exit_OnlyWindow=1             "如果taglist窗口是最后一个窗�
 "let Tlist_Use_Right_Window=1           "在右侧窗口中显示taglist窗口
 "let Tlist_Use_Left_Windo =1             "在左侧窗口中显示taglist窗口 
 
-Plugin 'chiphogg/vim-prototxt'
-Plugin 'jeffkreeftmeijer/vim-numbertoggle'
+"""""""""""""" vim-prototxt
+Plug 'chiphogg/vim-prototxt', { 'for': 'prototxt' }
+
+"""""""""""""" vim-numbertoggle
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 """""""""""""
-call vundle#end()            " required
+call plug#end()            " required
 filetype plugin indent on    " required
 syntax on
 
