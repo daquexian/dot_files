@@ -102,7 +102,10 @@ Plug 'chiphogg/vim-prototxt', { 'for': 'prototxt' }
 
 """""""""""""" vim-numbertoggle
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-"""""""""""""
+
+"""""""""""""" vim-commentary
+Plug 'tpope/vim-commentary'
+""""""""""""""
 call plug#end()            " required
 filetype plugin indent on    " required
 syntax on
