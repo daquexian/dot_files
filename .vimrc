@@ -51,7 +51,10 @@ let g:ycm_python_binary_path = '/usr/local/bin/python3'
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
 let g:ycm_show_diagnostics_ui = 0
-
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w'],
+            \ 'cs,lua,javascript': ['re!\w'],
+            \ }
 """""""""""""" ctrlp
 Plug 'kien/ctrlp.vim'
 
