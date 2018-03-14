@@ -1,0 +1,11 @@
+[user]
+	name = daquexian
+    email = daquexian566@gmail.com
+[alias]
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+    cp = cherry-pick
+[push]
+	default = simple
