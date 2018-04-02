@@ -39,6 +39,53 @@ endif
 
 call plug#begin()
 
+"""""""""""""" async.vim
+Plug 'prabirshrestha/async.vim'
+"""""""""""""" vim-lsp
+Plug 'prabirshrestha/vim-lsp'
+nnoremap <leader>jd :LspDefinition<CR>
+nnoremap <leader>jf :LspReferences<CR>
+nnoremap <leader>jj :LspRename<CR>
+nmap <C-k> <Plug>(qf_qf_previous)
+nmap <C-j> <Plug>(qf_qf_next)
+nmap <Home> <Plug>(qf_qf_previous)
+nmap <End>  <Plug>(qf_qf_next)
+nmap <C-Home> <Plug>(qf_loc_previous)
+nmap <C-End>  <Plug>(qf_loc_next)
+if executable('cquery')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'cquery',
+      \ 'cmd': {server_info->['cquery']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': { 'cacheDirectory': '/home/daquexian/tmp' },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+      \ })
+endif
+
+"""""""""""""" asynccomplete.vim
+" Plug 'prabirshrestha/asyncomplete.vim'
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+"""""""""""""" asynccomplete-lsp.vim
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"""""""""""""" vim-qf
+Plug 'romainl/vim-qf'
+
+" Plug 'autozimu/LanguageClient-neovim', {
+    " \ 'branch': 'next',
+    " \ 'do': 'bash install.sh',
+    " \ }
+
+" if has('nvim')
+  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+  " Plug 'Shougo/deoplete.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+" let g:deoplete#enable_at_startup = 1
+
 """""""""""""" YCM
 function! BuildYCM(info)
   if a:info.status == 'installed' || a:info.force
@@ -48,7 +95,7 @@ endfunction
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " let g:ycm_python_binary_path = '/usr/bin/python3'
 let g:ycm_python_binary_path = '/usr/local/bin/python3'
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
+" nnoremap <leader>jd :YcmCompleter GoTo<CR>
 let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_semantic_triggers =  {
@@ -64,7 +111,7 @@ let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=White
-" let g:ale_linters = { 'cpp': [] }
+" let g:ale_linters = { 'cpp': ['clangtidy'], 'c': ['clangtidy'] }
 
 """""""""""""" rainbow
 Plug 'luochen1990/rainbow'
