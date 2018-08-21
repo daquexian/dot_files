@@ -1,10 +1,10 @@
 set encoding=utf-8
 
+set cmdheight=2
+
 cmap w!! w !sudo tee > /dev/null %
 cmap vsb vertical sb
 
-map <C-h> :bp<CR>
-map <C-l> :bn<CR>
 let mapleader=","
 map <leader>tl :TlistToggle<CR>
 
@@ -31,6 +31,8 @@ set number
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+highlight Pmenu ctermbg=gray guibg=gray     " set pmenu color to gray
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -38,6 +40,24 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin()
+" Plug 'skywind3000/asyncrun.vim'
+
+Plug 'vim-scripts/a.vim'
+
+set noshowmode
+Plug 'mhinz/vim-signify'
+
+Plug 'Shougo/echodoc.vim'
+let g:echodoc_enable_at_startup = 1
+
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+
+Plug 'justinmk/vim-dirvish'
+
+Plug 'octol/vim-cpp-enhanced-highlight'
+let g:cpp_experimental_template_highlight = 1
+
+Plug 'tpope/vim-unimpaired'
 
 """""""""""""" async.vim
 Plug 'prabirshrestha/async.vim'
@@ -93,10 +113,10 @@ function! BuildYCM(info)
   endif
 endfunction
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-" let g:ycm_python_binary_path = '/usr/bin/python3'
-let g:ycm_python_binary_path = '/usr/local/bin/python3'
+let g:ycm_python_binary_path = '/usr/bin/python3'
+" let g:ycm_python_binary_path = '/usr/local/bin/python3'
 " nnoremap <leader>jd :YcmCompleter GoTo<CR>
-let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
+" let g:ycm_global_ycm_extra_conf = '~/vimrc/.ycm_extra_conf.py'
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_semantic_triggers =  {
             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w'],
@@ -111,7 +131,8 @@ let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=White
-" let g:ale_linters = { 'cpp': ['clangtidy'], 'c': ['clangtidy'] }
+" let g:ale_linters = { 'cpp': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
+let g:ale_linters = { 'cpp': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
 
 """""""""""""" rainbow
 Plug 'luochen1990/rainbow'
@@ -121,18 +142,19 @@ let g:rainbow_active = 1
 Plug 'vim-airline/vim-airline'
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#show_buffers = 1
+" let g:airline#extensions#tabline#fnamemod = ':t'
+" let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#exclude_preview = 1
-let airline#extensions#tabline#disable_refresh = 0
-let g:airline#extensions#tabline#buffer_min_count = 0
-let g:airline#extensions#tabline#show_tabs = 0
+" let airline#extensions#tabline#disable_refresh = 1
+" let g:airline#extensions#tabline#buffer_min_count = 0
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_tabs = 1
 
 """""""""""""" nerdtree
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 let g:NERDTreeDirAllows=0
 " 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
-nmap <Leader>fl :NERDTreeToggle<CR>
+" nmap <Leader>fl :NERDTreeToggle<CR>
 " 设置NERDTree子窗口宽度
 let NERDTreeWinSize=32
 " 设置NERDTree子窗口位置
