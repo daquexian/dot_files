@@ -17,7 +17,8 @@ set tabstop=4 shiftwidth=4
 " set incsearch
 set backspace=indent,eol,start
 set wildmenu
-set background=dark
+set background=light
+" colorscheme solarized
 " colorscheme molokai
 " let g:molokai_original=1
 " let g:rehash256=1
@@ -160,6 +161,7 @@ nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> <leader>jd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <leader>jj :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> <leader>jf :call LanguageClient#textDocument_references()<CR>
+let g:LanguageClient_hoverPreview = "Never"
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
@@ -177,8 +179,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 let g:LanguageClient_serverCommands = {
     \ 'python': ['pyls'],
-    \ 'cpp': ['ccls'],
-    \ 'c': ['ccls'],
+    \ 'cpp': ['ccls', '--init={"cacheDirectory":"/home/daquexian/.cache/ccls"}'],
+    \ 'c': ['ccls', '--init={"cacheDirectory":"/home/daquexian/.cache/ccls"}'],
     \ }
 
 """""""""""""" YCM
@@ -206,12 +208,13 @@ let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=White
-let g:ale_linters = { 'cpp': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
+let g:ale_linters = { 'cpp': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'] }
+" let g:ale_linters = { 'cpp': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
 " let g:ale_linters = { 'cpp': ['cquery', 'clang-format'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
 
 """""""""""""" rainbow
 Plug 'luochen1990/rainbow'
-let g:rainbow_active = 1
+let g:rainbow_active = 0
 
 """""""""""""" vim-airline
 Plug 'vim-airline/vim-airline'
@@ -276,3 +279,14 @@ set completeopt-=preview
 
 " For prototxt
 au Filetype prototxt setl tabstop=2 shiftwidth=2
+
+augroup LanguageClient_config
+  au!
+  au VimEnter * let g:Plugin_LanguageClient_started = 0
+  au User LanguageClientStarted setl signcolumn=yes
+  au User LanguageClientStarted let g:Plugin_LanguageClient_started = 1
+  au User LanguageClientStopped setl signcolumn=auto
+  au User LanguageClientStopped let g:Plugin_LanguageClient_stopped = 0
+  au CursorMoved * if g:Plugin_LanguageClient_started | sil! call LanguageClient#textDocument_documentHighlight() | sil! call LanguageClient#textDocument_hover() | endif
+  " au CursorMoved * if g:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_hover() | endif
+augroup END
