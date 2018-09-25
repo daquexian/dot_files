@@ -13,11 +13,13 @@ set autoindent
 set expandtab
 set tabstop=4 shiftwidth=4
 
-" 开启实时搜索功能
-" set incsearch
+set ignorecase
+set smartcase
+
+set noincsearch
 set backspace=indent,eol,start
 set wildmenu
-set background=light
+set background=dark
 " colorscheme solarized
 " colorscheme molokai
 " let g:molokai_original=1
@@ -31,6 +33,8 @@ set cursorcolumn
 " set hlsearch
 set number
 set nocompatible              " be iMproved, required
+set foldmethod=syntax
+set foldlevel=99
 filetype off                  " required
 
 highlight Pmenu ctermbg=gray guibg=gray     " set pmenu color to gray
@@ -44,12 +48,12 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin()
-Plug 'tenfyzhong/CompleteParameter.vim'
-inoremap <silent><expr> ( complete_parameter#pre_complete("()")
-smap <A-j> <Plug>(complete_parameter#goto_next_parameter)
-imap <A-j> <Plug>(complete_parameter#goto_next_parameter)
-smap <A-k> <Plug>(complete_parameter#goto_previous_parameter)
-imap <A-k> <Plug>(complete_parameter#goto_previous_parameter)
+" Plug 'tenfyzhong/CompleteParameter.vim'
+" inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+" smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+" imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+" smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+" imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
 
 Plug 'drmikehenry/vim-headerguard'
 
@@ -161,10 +165,13 @@ nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> <leader>jd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <leader>jj :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> <leader>jf :call LanguageClient#textDocument_references()<CR>
+nnoremap <silent> <leader>jl :call LanguageClient#textDocument_documentHighlight()<CR>
 let g:LanguageClient_hoverPreview = "Never"
 
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_selectionUI = "quickfix"
 " (Optional) Multi-entry selection UI.
-Plug 'junegunn/fzf'
+" Plug 'junegunn/fzf'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -179,10 +186,13 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 let g:LanguageClient_serverCommands = {
     \ 'python': ['pyls'],
-    \ 'cpp': ['ccls', '--init={"cacheDirectory":"/home/daquexian/.cache/ccls"}'],
-    \ 'c': ['ccls', '--init={"cacheDirectory":"/home/daquexian/.cache/ccls"}'],
+    \ 'cpp': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}'],
+    \ 'c': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}'],
     \ }
 
+    "\ 'cpp': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
+    "\ 'c': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
+" \ 'c': ['ccls'],
 """""""""""""" YCM
 " function! BuildYCM(info)
   " if a:info.status == 'installed' || a:info.force
@@ -262,6 +272,11 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'tomtom/tcomment_vim'
 """"""""""""""
 call plug#end()            " required
+call deoplete#custom#source('_',  'max_menu_width', 0)
+call deoplete#custom#source('_',  'max_abbr_width', 20)
+call deoplete#custom#source('_',  'max_kind_width', 20)
+call deoplete#custom#option('auto_complete_delay', 0)
+
 filetype plugin indent on    " required
 syntax on
 

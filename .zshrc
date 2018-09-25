@@ -54,6 +54,7 @@ bindkey '^f' autosuggest-accept
 bindkey '^j' autosuggest-execute
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
+bindkey '^[[Z' reverse-menu-complete
 
 export XMODIFIERS=@im=fcitx
 export QT_IM_MODULE=fcitx
@@ -65,3 +66,4 @@ alias cmake-android-27='cmake -DCMAKE_SYSTEM_NAME=Android -DCMAKE_ANDROID_NDK=/h
 fzfp(){
     fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
 }
+alias vim=nvim
