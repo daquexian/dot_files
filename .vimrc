@@ -109,6 +109,10 @@ let g:cpp_experimental_template_highlight = 1
 
 Plug 'tpope/vim-unimpaired'
 
+Plug 'tpope/vim-surround'
+
+Plug 'tpope/vim-repeat'
+
 """""""""""""" async.vim
 " Plug 'prabirshrestha/async.vim'
 """""""""""""" vim-lsp
@@ -163,7 +167,7 @@ nnoremap <silent> <leader>jf :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent> <leader>jl :call LanguageClient#textDocument_documentHighlight()<CR>
 let g:LanguageClient_hoverPreview = "Never"
 
-let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_diagnosticsEnable = 1
 let g:LanguageClient_selectionUI = "fzf"
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
@@ -254,7 +258,10 @@ let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=White
-let g:ale_linters = { 'cpp': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'] }
+let g:ale_linters = { 'cpp': ['clang-format', 'cppcheck', 'flawfinder'], 'c': ['clang-format', 'cppcheck', 'flawfinder'] }
+" let g:ale_linters = { 'cpp': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'] }
+" let g:ale_c_ccls_init_options = {"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls_for_ale"}
+" let g:ale_cpp_ccls_init_options = {"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls_for_ale"}
 " let g:ale_linters = { 'cpp': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
 " let g:ale_linters = { 'cpp': ['cquery', 'clang-format'], 'c': ['cquery', 'clang-format', 'cppcheck', 'flawfinder'] }
 
@@ -264,6 +271,12 @@ let g:rainbow_active = 0
 
 """""""""""""" vim-airline
 Plug 'vim-airline/vim-airline'
+let g:airline#extensions#languageclient#enabled = 1
+let airline#extensions#languageclient#error_symbol = 'E:'
+let airline#extensions#languageclient#warning_symbol = 'W:'
+let airline#extensions#languageclient#show_line_numbers = 1
+let airline#extensions#languageclient#open_lnum_symbol = '(L'
+let airline#extensions#languageclient#close_lnum_symbol = ')'
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 " let g:airline#extensions#tabline#fnamemod = ':t'
@@ -308,9 +321,9 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'tomtom/tcomment_vim'
 """"""""""""""
 call plug#end()            " required
-call deoplete#custom#source('_',  'max_menu_width', 0)
-call deoplete#custom#source('_',  'max_abbr_width', 20)
-call deoplete#custom#source('_',  'max_kind_width', 20)
+" call deoplete#custom#source('_',  'max_menu_width', 0)
+" call deoplete#custom#source('_',  'max_abbr_width', 20)
+" call deoplete#custom#source('_',  'max_kind_width', 20)
 call deoplete#custom#option('auto_complete_delay', 0)
 
 filetype plugin indent on    " required
@@ -346,7 +359,9 @@ function! Formatonsave()
   let l:formatdiff = 1
   py3f /usr/share/clang/clang-format.py
 endfunction
-autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()
+" autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()
+map <C-K> :pyf <path-to-this-file>/clang-format.py<cr>
+imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
 
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 
