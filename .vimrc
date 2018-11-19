@@ -97,8 +97,8 @@ Plug 'vim-scripts/a.vim'
 set noshowmode
 Plug 'mhinz/vim-signify'
 
-Plug 'Shougo/echodoc.vim'
-let g:echodoc_enable_at_startup = 1
+" Plug 'Shougo/echodoc.vim'
+" let g:echodoc_enable_at_startup = 1
 
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 
@@ -113,45 +113,13 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-repeat'
 
-"""""""""""""" async.vim
-" Plug 'prabirshrestha/async.vim'
-"""""""""""""" vim-lsp
-" Plug 'prabirshrestha/vim-lsp'
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/vim-lsp.log')
-" nnoremap <leader>jd :LspDefinition<CR>
-" nnoremap <leader>jf :LspReferences<CR>
-" nnoremap <leader>jj :LspRename<CR>
 nmap <C-k> <Plug>(qf_qf_previous)
 nmap <C-j> <Plug>(qf_qf_next)
 nmap <Home> <Plug>(qf_qf_previous)
 nmap <End>  <Plug>(qf_qf_next)
 nmap <C-Home> <Plug>(qf_loc_previous)
 nmap <C-End>  <Plug>(qf_loc_next)
-" if executable('cquery')
-   " au User lsp_setup call lsp#register_server({
-      " \ 'name': 'cquery',
-      " \ 'cmd': {server_info->['cquery']},
-      " \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      " \ 'initialization_options': { 'cacheDirectory': '/home/daquexian/tmp' },
-      " \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-      " \ })
-" endif
-" if executable('pyls')
-    " au User lsp_setup call lsp#register_server({
-        " \ 'name': 'pyls',
-        " \ 'cmd': {server_info->['pyls']},
-        " \ 'whitelist': ['python'],
-        " \ })
-" endif
-
-"""""""""""""" asynccomplete.vim
-" Plug 'prabirshrestha/asyncomplete.vim'
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-"""""""""""""" asynccomplete-lsp.vim
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"
 """""""""""""" vim-qf
 Plug 'romainl/vim-qf'
 
@@ -160,11 +128,14 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+inoremap <F5> <ESC> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> <leader>jd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <leader>jj :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent> <leader>jf :call LanguageClient#textDocument_references()<CR>
-nnoremap <silent> <leader>jl :call LanguageClient#textDocument_documentHighlight()<CR>
+inoremap <silent> <leader>js <C-o>:call LanguageClient#textDocument_signatureHelp()<CR>
+
+let g:LanguageClient_autoStart = 1
 let g:LanguageClient_hoverPreview = "Never"
 
 let g:LanguageClient_diagnosticsEnable = 1
@@ -213,52 +184,89 @@ command! -bang -nargs=* Rg
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-let g:deoplete#enable_at_startup = 1
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+Plug 'ncm2/ncm2'
+" ncm2 requires nvim-yarp
+Plug 'roxma/nvim-yarp'
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-ultisnips'
+Plug 'SirVer/ultisnips'
+
+" Press enter key to trigger snippet expansion
+" The parameters are the same as `:help feedkeys()`
+inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<cr>", 'n')
+
+" c-j c-k for moving in snippet
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
+" UltiSnips+NCM function parameter expansion
+
+" We don't really want UltiSnips to map these two, but there's no option for
+" that so just make it map them to a <Plug> key.
+let g:UltiSnipsExpandTrigger       = "<Plug>(ultisnips_expand_or_jump)"
+let g:UltiSnipsJumpForwardTrigger  = "<Plug>(ultisnips_expand_or_jump)"
+" Let UltiSnips bind the jump backward trigger as there's nothing special
+" about it.
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+
+" Try expanding snippet or jumping with UltiSnips and return <cr> if nothing
+" worked.
+function! UltiSnipsExpandOrJumpOrCr()
+  call UltiSnips#ExpandSnippetOrJump()
+  if g:ulti_expand_or_jump_res > 0
+    return ""
+  else
+    return "\<cr>"
+  endif
+endfunction
+
+" First try expanding with ncm2_ultisnips. This does both LSP snippets and
+" normal snippets when there's a completion popup visible.
+inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<Plug>(ultisnips_try_expand)")
+
+" If that failed, try the UltiSnips expand or jump function. This handles
+" short snippets when the completion popup isn't visible yet as well as
+" jumping forward from the insert mode. Writes <CR> if there is no special
+" action taken.
+inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrCr()<CR>
+
+" Select mode mapping for jumping forward with <CR>.
+snoremap <silent> <cr> <Esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
+
+au TextChangedI * call ncm2#auto_trigger()
+
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
+
 let g:LanguageClient_serverCommands = {
     \ 'python': ['pyls'],
-    \ 'cpp': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}'],
-    \ 'c': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}'],
+    \ 'cpp': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}', '--log-file=/tmp/cc.log'],
+    \ 'c': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}', '--log-file=/tmp/cc.log'],
     \ }
 
+    "\ 'cpp': ['clangd'],
+    "\ 'c': ['clangd']
     "\ 'cpp': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
     "\ 'c': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
 " \ 'c': ['ccls'],
-"""""""""""""" YCM
-" function! BuildYCM(info)
-  " if a:info.status == 'installed' || a:info.force
-    " !./install.py --clang-completer --system-libclang
-  " endif
-" endfunction
-" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-" let g:ycm_python_binary_path = '/usr/bin/python3'
-" " let g:ycm_python_binary_path = '/usr/local/bin/python3'
-" " nnoremap <leader>jd :YcmCompleter GoTo<CR>
-" let g:ycm_global_ycm_extra_conf = '/home/daquexian/dot_files/.ycm_extra_conf.py'
-" let g:ycm_show_diagnostics_ui = 0
-" let g:ycm_semantic_triggers =  {
-            " \ 'c,cpp,python,java,go,erlang,perl': ['re!\w'],
-            " \ 'cs,lua,javascript': ['re!\w'],
-            " \ }
+
 """""""""""""" ctrlp
 Plug 'kien/ctrlp.vim'
 
 """""""""""""" ale
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=White
-let g:ale_linters = { 'cpp': ['clang-format', 'cppcheck', 'flawfinder'], 'c': ['clang-format', 'cppcheck', 'flawfinder'] }
+" let g:ale_linters = { 'cpp': ['clang-format', 'cppcheck', 'flawfinder'], 'c': ['clang-format', 'cppcheck', 'flawfinder'] }
 " let g:ale_linters = { 'cpp': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'], 'c': ['ccls', 'clang-format', 'cppcheck', 'flawfinder'] }
 " let g:ale_c_ccls_init_options = {"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls_for_ale"}
 " let g:ale_cpp_ccls_init_options = {"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls_for_ale"}
@@ -319,12 +327,12 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 """""""""""""" tcomment_vim
 Plug 'tomtom/tcomment_vim'
+
+"""""""""""""" vim-lldb
+Plug 'gilligan/vim-lldb'
+
 """"""""""""""
 call plug#end()            " required
-" call deoplete#custom#source('_',  'max_menu_width', 0)
-" call deoplete#custom#source('_',  'max_abbr_width', 20)
-" call deoplete#custom#source('_',  'max_kind_width', 20)
-call deoplete#custom#option('auto_complete_delay', 0)
 
 filetype plugin indent on    " required
 syntax on
@@ -351,17 +359,19 @@ augroup LanguageClient_config
   au User LanguageClientStarted let g:Plugin_LanguageClient_started = 1
   au User LanguageClientStopped setl signcolumn=auto
   au User LanguageClientStopped let g:Plugin_LanguageClient_stopped = 0
-  au CursorMoved * if g:Plugin_LanguageClient_started | sil! call LanguageClient#textDocument_documentHighlight() | sil! call LanguageClient#textDocument_hover() | endif
-  " au CursorMoved * if g:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_hover() | endif
+  au CursorMoved * if g:Plugin_LanguageClient_started | sil! call LanguageClient#textDocument_documentHighlight() | endif
+  " au CursorHold * if g:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_hover() | endif
 augroup END
 
+map <C-u> :py3f /usr/share/clang/clang-format.py<cr>
+imap <C-u> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
 function! Formatonsave()
   let l:formatdiff = 1
   py3f /usr/share/clang/clang-format.py
 endfunction
 " autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()
-map <C-K> :pyf <path-to-this-file>/clang-format.py<cr>
-imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
+" map <C-K> :pyf <path-to-this-file>/clang-format.py<cr>
+" imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
 
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 
