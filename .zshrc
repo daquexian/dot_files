@@ -67,3 +67,8 @@ fzfp(){
     fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
 }
 alias vim=nvim
+
+# Map caps lock to control
+setxkbmap -option ctrl:nocaps
+# Map single control to escape
+xcape -e 'Control_L=Escape'
