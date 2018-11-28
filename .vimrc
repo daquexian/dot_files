@@ -113,6 +113,8 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-repeat'
 
+Plug 'daquexian/project_manager.vim'
+
 nmap <C-k> <Plug>(qf_qf_previous)
 nmap <C-j> <Plug>(qf_qf_next)
 nmap <Home> <Plug>(qf_qf_previous)
@@ -123,23 +125,20 @@ nmap <C-End>  <Plug>(qf_loc_next)
 """""""""""""" vim-qf
 Plug 'romainl/vim-qf'
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-inoremap <F5> <ESC> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> <leader>jd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <leader>jj :call LanguageClient#textDocument_rename()<CR>
-nnoremap <silent> <leader>jf :call LanguageClient#textDocument_references()<CR>
-inoremap <silent> <leader>js <C-o>:call LanguageClient#textDocument_signatureHelp()<CR>
+Plug 'jiangmiao/auto-pairs'
 
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_hoverPreview = "Never"
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+nmap <silent> <leader>jd <Plug>(coc-definition)
+nmap <silent> <leader>jj <Plug>(coc-rename)
+nmap <silent> <leader>ji <Plug>(coc-diagnostic-info)
+nmap <silent> <leader>jf <Plug>(coc-references)
+nnoremap <silent> K :call CocActionAsync('doHover')<cr>
+set updatetime=300
+au CursorMoved * sil call CocActionAsync('highlight')
+au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
+let g:coc_snippet_next = '<enter>'
+" let g:coc_snippet_prev = '<S-TAB>'
 
-let g:LanguageClient_diagnosticsEnable = 1
-let g:LanguageClient_selectionUI = "fzf"
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -184,27 +183,16 @@ command! -bang -nargs=* Rg
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-Plug 'ncm2/ncm2'
-" ncm2 requires nvim-yarp
-Plug 'roxma/nvim-yarp'
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
-set shortmess+=c
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-ultisnips'
 Plug 'SirVer/ultisnips'
 
 " Press enter key to trigger snippet expansion
 " The parameters are the same as `:help feedkeys()`
-inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<cr>", 'n')
+" inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<cr>", 'n')
 
 " c-j c-k for moving in snippet
 let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
-let g:UltiSnipsRemoveSelectModeMappings = 0
+" let g:UltiSnipsRemoveSelectModeMappings = 0
 
 " UltiSnips+NCM function parameter expansion
 
@@ -212,9 +200,6 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 " that so just make it map them to a <Plug> key.
 let g:UltiSnipsExpandTrigger       = "<Plug>(ultisnips_expand_or_jump)"
 let g:UltiSnipsJumpForwardTrigger  = "<Plug>(ultisnips_expand_or_jump)"
-" Let UltiSnips bind the jump backward trigger as there's nothing special
-" about it.
-let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 
 " Try expanding snippet or jumping with UltiSnips and return <cr> if nothing
 " worked.
@@ -227,35 +212,14 @@ function! UltiSnipsExpandOrJumpOrCr()
   endif
 endfunction
 
-" First try expanding with ncm2_ultisnips. This does both LSP snippets and
-" normal snippets when there's a completion popup visible.
-inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<Plug>(ultisnips_try_expand)")
-
 " If that failed, try the UltiSnips expand or jump function. This handles
 " short snippets when the completion popup isn't visible yet as well as
 " jumping forward from the insert mode. Writes <CR> if there is no special
 " action taken.
-inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrCr()<CR>
+" inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrCr()<CR>
 
 " Select mode mapping for jumping forward with <CR>.
-snoremap <silent> <cr> <Esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
-
-au TextChangedI * call ncm2#auto_trigger()
-
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
-
-let g:LanguageClient_serverCommands = {
-    \ 'python': ['pyls'],
-    \ 'cpp': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}', '--log-file=/tmp/cc.log'],
-    \ 'c': ['ccls', '--init={"clang":{"excludeArgs":["-save-temps", "-fopenmp"]}, "cacheDirectory":"/home/daquexian/.cache/ccls"}', '--log-file=/tmp/cc.log'],
-    \ }
-
-    "\ 'cpp': ['clangd'],
-    "\ 'c': ['clangd']
-    "\ 'cpp': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
-    "\ 'c': ['/home/daquexian/repos/ccls/build/ccls', '--log-file=/tmp/cc.log'],
-" \ 'c': ['ccls'],
+" snoremap <silent> <cr> <Esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
 
 """""""""""""" ctrlp
 Plug 'kien/ctrlp.vim'
@@ -294,6 +258,8 @@ let g:airline#extensions#tabline#exclude_preview = 1
 " let g:airline#extensions#tabline#buffer_min_count = 0
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_tabs = 1
+let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 """""""""""""" nerdtree
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -329,9 +295,20 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'tomtom/tcomment_vim'
 
 """""""""""""" vim-lldb
-Plug 'gilligan/vim-lldb'
+" Plug 'gilligan/vim-lldb'
+
+Plug 'sakhnik/nvim-gdb', { 'do': './install.sh' }
 
 """"""""""""""
+
+Plug 'kassio/neoterm'
+
+""""""""""""""
+
+
+Plug 'ayu-theme/ayu-vim' " or other package manager
+set termguicolors     " enable true colors support
+
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -352,17 +329,6 @@ set completeopt-=preview
 " For prototxt
 au Filetype prototxt setl tabstop=2 shiftwidth=2
 
-augroup LanguageClient_config
-  au!
-  au VimEnter * let g:Plugin_LanguageClient_started = 0
-  au User LanguageClientStarted setl signcolumn=yes
-  au User LanguageClientStarted let g:Plugin_LanguageClient_started = 1
-  au User LanguageClientStopped setl signcolumn=auto
-  au User LanguageClientStopped let g:Plugin_LanguageClient_stopped = 0
-  au CursorMoved * if g:Plugin_LanguageClient_started | sil! call LanguageClient#textDocument_documentHighlight() | endif
-  " au CursorHold * if g:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_hover() | endif
-augroup END
-
 map <C-u> :py3f /usr/share/clang/clang-format.py<cr>
 imap <C-u> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
 function! Formatonsave()
@@ -374,5 +340,37 @@ endfunction
 " imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
 
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
+
+tnoremap <Esc> <C-\><C-n>
+tnoremap <A-h> <C-\><C-N><C-w>h
+tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-k> <C-\><C-N><C-w>k
+tnoremap <A-l> <C-\><C-N><C-w>l
+inoremap <A-h> <C-\><C-N><C-w>h
+inoremap <A-j> <C-\><C-N><C-w>j
+inoremap <A-k> <C-\><C-N><C-w>k
+inoremap <A-l> <C-\><C-N><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+
+nmap <A-r> <Plug>BuildAndRun
+nmap <A-u> <Plug>Run
+nmap <A-s> <Plug>SelectConfig
+nmap <A-e> <Plug>OpenConfig
+nmap <A-c> :Tclose<cr>
+nmap <A-o> :Topen<cr>
+
+function! g:ConfigCallback()
+    execute 'silent !ln -sf ' . g:cpp_project_props['build_dir'] . '/compile_commands.json'
+    if exists(':CocRestart')
+        execute 'CocRestart'
+    endif
+endfunction
+
+inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 source $HOME/.vimrc.local
