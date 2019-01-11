@@ -66,6 +66,9 @@ alias cmake-android-27='cmake -DCMAKE_SYSTEM_NAME=Android -DCMAKE_ANDROID_NDK=/h
 fzfp(){
     fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
 }
+fh(){
+    print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *\**//')
+}
 alias vim=nvim
 
 # Map caps lock to control
