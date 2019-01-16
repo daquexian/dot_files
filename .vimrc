@@ -309,6 +309,10 @@ Plug 'kassio/neoterm'
 Plug 'ayu-theme/ayu-vim' " or other package manager
 set termguicolors     " enable true colors support
 
+Plug 'christoomey/vim-tmux-navigator'
+
+let g:tmux_navigator_no_mappings = 1
+
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -342,6 +346,13 @@ endfunction
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 
 tnoremap <Esc> <C-\><C-n>
+
+nnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <A-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <A-\> :TmuxNavigatePrevious<cr>
+
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
@@ -350,10 +361,6 @@ inoremap <A-h> <C-\><C-N><C-w>h
 inoremap <A-j> <C-\><C-N><C-w>j
 inoremap <A-k> <C-\><C-N><C-w>k
 inoremap <A-l> <C-\><C-N><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
 
 nmap <A-r> <Plug>BuildAndRun
 nmap <A-u> <Plug>Run
@@ -363,7 +370,8 @@ nmap <A-c> :Tclose<cr>
 nmap <A-o> :Topen<cr>
 
 function! g:ConfigCallback()
-    execute 'silent !ln -sf ' . g:cpp_project_props['build_dir'] . '/compile_commands.json'
+    execute 'silent !cd '.g:cpp_project_props['build_dir'].'/..'
+    execute 'silent !ln -sf ' . g:cpp_project_props['build_dir'] . '/compile_commands.json '.g:cpp_project_props['build_dir'].'/..'
     if exists(':CocRestart')
         execute 'CocRestart'
     endif
