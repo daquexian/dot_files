@@ -13,6 +13,8 @@ set autoindent
 set expandtab
 set tabstop=4 shiftwidth=4
 
+set awa
+
 set ignorecase
 set smartcase
 
@@ -97,10 +99,8 @@ Plug 'vim-scripts/a.vim'
 set noshowmode
 Plug 'mhinz/vim-signify'
 
-" Plug 'Shougo/echodoc.vim'
-" let g:echodoc_enable_at_startup = 1
-
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+let g:Lf_DefaultExternalTool = "rg"
 
 Plug 'justinmk/vim-dirvish'
 
@@ -115,13 +115,6 @@ Plug 'tpope/vim-repeat'
 
 Plug 'daquexian/project_manager.vim'
 
-nmap <C-k> <Plug>(qf_qf_previous)
-nmap <C-j> <Plug>(qf_qf_next)
-nmap <Home> <Plug>(qf_qf_previous)
-nmap <End>  <Plug>(qf_qf_next)
-nmap <C-Home> <Plug>(qf_loc_previous)
-nmap <C-End>  <Plug>(qf_loc_next)
-"
 """""""""""""" vim-qf
 Plug 'romainl/vim-qf'
 
@@ -132,11 +125,26 @@ nmap <silent> <leader>jd <Plug>(coc-definition)
 nmap <silent> <leader>jj <Plug>(coc-rename)
 nmap <silent> <leader>ji <Plug>(coc-diagnostic-info)
 nmap <silent> <leader>jf <Plug>(coc-references)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> <C-j> <Plug>(coc-diagnostic-next)
+nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
 nnoremap <silent> K :call CocActionAsync('doHover')<cr>
-set updatetime=300
+set updatetime=1000
 au CursorMoved * sil call CocActionAsync('highlight')
 au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
 let g:coc_snippet_next = '<enter>'
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " let g:coc_snippet_prev = '<S-TAB>'
 
 " (Optional) Multi-entry selection UI.
@@ -183,43 +191,13 @@ command! -bang -nargs=* Rg
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
+""""""""""""""
+
 Plug 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger       = "<Nop>"
+let g:UltiSnipsJumpForwardTrigger  = "<Nop>"
 
-" Press enter key to trigger snippet expansion
-" The parameters are the same as `:help feedkeys()`
-" inoremap <silent> <expr> <cr> ncm2_ultisnips#expand_or("\<cr>", 'n')
-
-" c-j c-k for moving in snippet
-let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
-" let g:UltiSnipsRemoveSelectModeMappings = 0
-
-" UltiSnips+NCM function parameter expansion
-
-" We don't really want UltiSnips to map these two, but there's no option for
-" that so just make it map them to a <Plug> key.
-let g:UltiSnipsExpandTrigger       = "<Plug>(ultisnips_expand_or_jump)"
-let g:UltiSnipsJumpForwardTrigger  = "<Plug>(ultisnips_expand_or_jump)"
-
-" Try expanding snippet or jumping with UltiSnips and return <cr> if nothing
-" worked.
-function! UltiSnipsExpandOrJumpOrCr()
-  call UltiSnips#ExpandSnippetOrJump()
-  if g:ulti_expand_or_jump_res > 0
-    return ""
-  else
-    return "\<cr>"
-  endif
-endfunction
-
-" If that failed, try the UltiSnips expand or jump function. This handles
-" short snippets when the completion popup isn't visible yet as well as
-" jumping forward from the insert mode. Writes <CR> if there is no special
-" action taken.
-" inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrCr()<CR>
-
-" Select mode mapping for jumping forward with <CR>.
-" snoremap <silent> <cr> <Esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
+Plug 'honza/vim-snippets'
 
 """""""""""""" ctrlp
 Plug 'kien/ctrlp.vim'
@@ -294,17 +272,11 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 """""""""""""" tcomment_vim
 Plug 'tomtom/tcomment_vim'
 
-"""""""""""""" vim-lldb
-" Plug 'gilligan/vim-lldb'
-
-Plug 'sakhnik/nvim-gdb', { 'do': './install.sh' }
-
 """"""""""""""
 
 Plug 'kassio/neoterm'
 
 """"""""""""""
-
 
 Plug 'ayu-theme/ayu-vim' " or other package manager
 set termguicolors     " enable true colors support
@@ -332,16 +304,6 @@ set completeopt-=preview
 
 " For prototxt
 au Filetype prototxt setl tabstop=2 shiftwidth=2
-
-map <C-u> :py3f /usr/share/clang/clang-format.py<cr>
-imap <C-u> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
-function! Formatonsave()
-  let l:formatdiff = 1
-  py3f /usr/share/clang/clang-format.py
-endfunction
-" autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()
-" map <C-K> :pyf <path-to-this-file>/clang-format.py<cr>
-" imap <C-K> <c-o>:pyf <path-to-this-file>/clang-format.py<cr>
 
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 

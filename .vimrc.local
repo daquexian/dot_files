@@ -1,5 +1,7 @@
-set background=dark
+" set background=dark
 " set background=light
+let ayucolor="mirage"
+colorscheme ayu
 " colorscheme solarized
 " colorscheme molokai
 " let g:molokai_original=1

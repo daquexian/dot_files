@@ -7,9 +7,9 @@
 
 alias ls='ls --color=auto'
 
-export EDITOR=vim
-export VISUAL=vim
-export SUDO_EDITOR=vim
+export EDITOR=nvim
+export VISUAL=nvim
+export SUDO_EDITOR=nvim
 
 export http_proxy=127.0.0.1:8118
 export https_proxy=127.0.0.1:8118
@@ -18,8 +18,6 @@ export HTTPS_PROXY=127.0.0.1:8118
 
 export PATH=$PATH:/home/daquexian/.local/bin
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -45,9 +43,11 @@ plugins=(
     pip
     python
     vi-mode
+    z
     )
 
-. /home/daquexian/repos/z/z.sh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 bindkey -v
 bindkey '^f' autosuggest-accept
@@ -55,6 +55,7 @@ bindkey '^j' autosuggest-execute
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 bindkey '^[[Z' reverse-menu-complete
+bindkey "^?" backward-delete-char
 
 export XMODIFIERS=@im=fcitx
 export QT_IM_MODULE=fcitx

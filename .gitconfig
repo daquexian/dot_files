@@ -7,5 +7,11 @@
     co = checkout
     br = branch
     cp = cherry-pick
+	d = difftool
 [push]
 	default = simple
+	followTags = true
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
