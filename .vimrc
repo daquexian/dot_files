@@ -143,6 +143,10 @@ command! -nargs=0 Format :call CocAction('format')
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " let g:coc_snippet_prev = '<S-TAB>'
@@ -284,6 +288,13 @@ set termguicolors     " enable true colors support
 Plug 'christoomey/vim-tmux-navigator'
 
 let g:tmux_navigator_no_mappings = 1
+
+""""""""""""""
+
+Plug 'JamshedVesuna/vim-markdown-preview'
+
+let vim_markdown_preview_github=1
+let vim_markdown_preview_use_xdg_open=1
 
 call plug#end()            " required
 
