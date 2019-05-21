@@ -97,16 +97,12 @@ Plug 'tenfyzhong/vim-gencode-cpp'
 Plug 'vim-scripts/a.vim'
 
 set noshowmode
-Plug 'mhinz/vim-signify'
 
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 let g:Lf_DefaultExternalTool = "rg"
 
-Plug 'justinmk/vim-dirvish'
-
 Plug 'octol/vim-cpp-enhanced-highlight'
 let g:cpp_experimental_template_highlight = 1
-
 Plug 'tpope/vim-unimpaired'
 
 Plug 'tpope/vim-surround'
@@ -117,8 +113,6 @@ Plug 'daquexian/project_manager.vim'
 
 """""""""""""" vim-qf
 Plug 'romainl/vim-qf'
-
-Plug 'jiangmiao/auto-pairs'
 
 Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 nmap <silent> <leader>jd <Plug>(coc-definition)
@@ -150,6 +144,7 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " let g:coc_snippet_prev = '<S-TAB>'
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr><Paste>
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
@@ -314,7 +309,9 @@ endfunc
 set completeopt-=preview
 
 " For prototxt
-au Filetype prototxt setl tabstop=2 shiftwidth=2
+au Filetype prototxt setl ts=2 sts=2 sw=2
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml 
+au Filetype yaml setl ts=2 sts=2 sw=2
 
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 
