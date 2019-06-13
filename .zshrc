@@ -1,9 +1,19 @@
-#
-# ~/.zshrc
-#
+export PATH=$PATH:/home/daquexian/.local/bin
 
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=1000
+unsetopt beep
+
+# Path to your oh-my-zsh installation.
+export ZSH="/home/daquexian/.oh-my-zsh"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+HYPHEN_INSENSITIVE="true"
+
+source $ZSH/oh-my-zsh.sh
 
 alias ls='ls --color=auto'
 
@@ -16,13 +26,6 @@ export https_proxy=127.0.0.1:8118
 export HTTP_PROXY=127.0.0.1:8118
 export HTTPS_PROXY=127.0.0.1:8118
 
-export PATH=$PATH:/home/daquexian/.local/bin
-
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=1000
-unsetopt beep
 # End of lines configured by zsh-newuser-install
 zstyle :compinstall filename '/home/daquexian/.zshrc'
 
@@ -30,8 +33,6 @@ autoload -Uz compinit promptinit
 compinit
 promptinit
 prompt walters
-
-export ZSH=/usr/share/oh-my-zsh
 
 ZSH_THEME="jreese"
 source $ZSH/oh-my-zsh.sh
@@ -78,3 +79,5 @@ alias cat=bat
 setxkbmap -option ctrl:nocaps
 # Map single control to escape
 xcape -e 'Control_L=Escape'
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
