@@ -114,7 +114,7 @@ Plug 'daquexian/project_manager.vim'
 """""""""""""" vim-qf
 Plug 'romainl/vim-qf'
 
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 nmap <silent> <leader>jd <Plug>(coc-definition)
 nmap <silent> <leader>jj <Plug>(coc-rename)
 nmap <silent> <leader>ji <Plug>(coc-diagnostic-info)
@@ -290,6 +290,11 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 
 let vim_markdown_preview_github=1
 let vim_markdown_preview_use_xdg_open=1
+
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-function'
+Plug 'sgur/vim-textobj-parameter'
+let g:vim_textobj_parameter_mapping = 'a'
 
 call plug#end()            " required
 
