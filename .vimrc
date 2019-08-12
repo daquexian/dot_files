@@ -98,9 +98,6 @@ Plug 'vim-scripts/a.vim'
 
 set noshowmode
 
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-let g:Lf_DefaultExternalTool = "rg"
-
 Plug 'octol/vim-cpp-enhanced-highlight'
 let g:cpp_experimental_template_highlight = 1
 Plug 'tpope/vim-unimpaired'
@@ -127,8 +124,14 @@ nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
 nnoremap <silent> K :call CocActionAsync('doHover')<cr>
 set updatetime=1000
 au CursorMoved * sil call CocActionAsync('highlight')
-au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
-let g:coc_snippet_next = '<enter>'
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+" let g:coc_snippet_next = '<enter>'
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
@@ -144,12 +147,14 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " let g:coc_snippet_prev = '<S-TAB>'
-nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr><Paste>
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 let g:fzf_layout = {'down': '30%'}
+
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 
 " Command for git grep
 " - fzf#vim#grep(command, with_column, [options], [fullscreen])
@@ -174,21 +179,26 @@ command! -bang Colors
 "   :Ag! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 fzf#vim#with_preview(),
   \                 <bang>0)
 
 " Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   fzf#vim#with_preview(),
   \   <bang>0)
 
 " Likewise, Files command with preview window
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+" Buffers seems not support preview
+" command! -bang -nargs=? -complete=dir Buffers
+"   \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+nnoremap <leader>f :Files<cr>
+nnoremap <leader>b :Buffers<cr>
 
 """"""""""""""
 
@@ -197,9 +207,6 @@ let g:UltiSnipsExpandTrigger       = "<Nop>"
 let g:UltiSnipsJumpForwardTrigger  = "<Nop>"
 
 Plug 'honza/vim-snippets'
-
-"""""""""""""" ctrlp
-Plug 'kien/ctrlp.vim'
 
 """""""""""""" ale
 " Plug 'w0rp/ale'
@@ -355,5 +362,7 @@ endfunction
 inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
 
 source $HOME/.vimrc.local
