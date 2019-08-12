@@ -124,6 +124,7 @@ nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
 nnoremap <silent> K :call CocActionAsync('doHover')<cr>
 set updatetime=1000
 au CursorMoved * sil call CocActionAsync('highlight')
+hi CocHighlightText guibg=none guifg=none gui=underline
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
