@@ -116,7 +116,7 @@ Plug 'romainl/vim-qf'
 Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 nmap <silent> <leader>jd <Plug>(coc-definition)
 nmap <silent> <leader>jj <Plug>(coc-rename)
-nmap <silent> <leader>ji <Plug>(coc-diagnostic-info)
+nmap <silent> <leader>ji <Plug>(coc-implementation)
 nmap <silent> <leader>jf <Plug>(coc-references)
 nmap <silent> <leader>jt <Plug>(coc-type-definition)<cr>
 " Fix autofix problem of current line
@@ -127,8 +127,12 @@ nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
 nnoremap <silent> <leader>jb :call CocLocations('ccls','$ccls/inheritance',{'levels':10})<cr>
 nnoremap <silent> <leader>je :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true,'levels':10})<cr>
 nnoremap <silent> K :call CocActionAsync('doHover')<cr>
+nnoremap <silent> <A-p> :call CocActionAsync('showSignatureHelp')<cr>
+imap <silent> <A-p> <c-o><A-p>
+" inoremap <silent> <A-p> sil call CocActionAsync('showSignatureHelp')
 au CursorMoved * sil call CocActionAsync('highlight')
-au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
+" au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
+" au CursorHold * sil call CocActionAsync('showSignatureHelp')
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
@@ -307,6 +311,11 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-function'
 Plug 'sgur/vim-textobj-parameter'
 let g:vim_textobj_parameter_mapping = 'a'
+
+Plug 'vim-scripts/DoxygenToolkit.vim'
+
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-dispatch'
 
 call plug#end()            " required
 
