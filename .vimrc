@@ -317,6 +317,8 @@ Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 
+Plug 'Krasjet/auto.pairs'
+
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -342,6 +344,23 @@ au Filetype yaml setl ts=2 sts=2 sw=2
 autocmd VimEnter * call fzf#vim#with_preview('right:50%:hidden', '?')
 
 tnoremap <Esc> <C-\><C-n>
+
+nmap ˙ <A-h>
+nmap ∆ <A-j>
+nmap ˚ <A-k>
+nmap ¬ <A-l>
+nmap « <A-\>
+nmap « <A-r>
+nmap ¨ <A-u>
+nmap ß <A-s>
+nmap ´ <A-e>
+nmap ç <A-c>
+nmap ø <A-o>
+
+tmap ˙ <A-h>
+tmap ∆ <A-j>
+tmap ˚ <A-k>
+tmap ¬ <A-l>
 
 nnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
